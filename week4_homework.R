@@ -1,0 +1,13 @@
+library(tidyverse)
+library (dplyr)
+surveys <- read_csv('data/portal_data_joined.csv')
+surveys_weight <- filter(surveys,surveys$weight < 60 & weight > 30)
+head(surveys_weight)
+?summarise
+biggest_critters <- surveys %>% group_by(species_id, sex) %>% filter(!is.na(weight)) %>% summarise(maxweight = max(weight))
+biggest_critters <- biggest_critters %>% arrange(maxweight)                            
+surveys_avg_weight <- surveys %>% filter(!is.na(weight)) %>% group_by(species_id, sex) %>% mutate(avg_weight = mean(weight))
+head(surveys_avg_weight)
+surveys_avg_weight <- surveys_avg_weight %>% select(species_id,sex,weight,avg_weight)
+surveys_above_avg <- surveys_avg_weight %>% mutate(above_avg = (weight > avg_weight))
+head(surveys_above_avg)
